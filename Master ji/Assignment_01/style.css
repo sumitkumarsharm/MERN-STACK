@@ -1,0 +1,339 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+:root {
+    --base-color: #fff;
+    --text-color: #000;
+    --primary-color: #242a39;
+    --base-varient: #087cf7;
+    --secondry-Color: #fff;
+    --border-color: #232222;
+
+}
+
+
+
+.Root {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--base-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+
+
+
+.Root h1 {
+    font-size: 60px;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: italic;
+}
+
+.Root .QuotesContainer {
+    width: 60%;
+    min-height: 50vh;
+    padding: 90px;
+    margin-inline: auto;
+    border-radius: 10px;
+    background-color: var(--secondry-Color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Root .QuotesContainer .content {
+    font-size: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.Root .QuotesContainer .Author {
+    font-size: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    align-self: flex-end;
+}
+
+.Root .ShareNextContainer {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+}
+
+.Root .ShareNextContainer .btn-2 {
+    border-radius: 50px;
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    padding: 10px 30px;
+    font-size: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    fill: var(--base-varient);
+    cursor: pointer;
+}
+
+.Root .ShareNextContainer .btn-1 {
+    border-radius: 50px;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 16px 30px;
+    font-size: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: var(--base-color);
+    cursor: pointer;
+} */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+/* Variables */
+:root {
+    --base-color: #fff;
+    --text-color: #000;
+    --primary-color: #242a39;
+    --base-varient: #087cf7;
+    --secondry-Color: #fff;
+    --border-color: #232222;
+}
+
+/* Main Container */
+.Root {
+    width: 100%;
+    min-height: 100vh;
+    /* background-color: var(--base-color); */
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+}
+
+/* Heading */
+.Root h1 {
+    font-size: 60px;
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    font-style: italic;
+}
+
+/* Quotes Container */
+.Root .QuotesContainer {
+    width: 60%;
+    min-height: 50vh;
+    padding: 90px;
+    margin-inline: auto;
+    border-radius: 10px;
+    background-color: var(--secondry-Color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.Root .QuotesContainer .content {
+    font-size: 30px;
+    font-family: system-ui, sans-serif;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.Root .QuotesContainer .Author {
+    font-size: 30px;
+    font-family: system-ui, sans-serif;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    align-self: flex-end;
+}
+
+/* Buttons Container */
+.Root .ShareNextContainer {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.Root .ShareNextContainer .btn-2,
+.Root .ShareNextContainer .btn-1 {
+    border-radius: 50px;
+    padding: 16px 30px;
+    font-size: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.Root .ShareNextContainer .btn-2 {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    fill: var(--base-varient);
+}
+
+.Root .ShareNextContainer .btn-1 {
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: var(--base-color);
+}
+
+/* Hover Effects */
+.Root .ShareNextContainer .btn-1:hover {
+    background-color: var(--base-varient);
+}
+
+.Root .ShareNextContainer .btn-2:hover {
+    background-color: var(--base-varient);
+    color: var(--base-color);
+}
+
+.Root .ShareNextContainer .btn-2:hover svg {
+    fill: #fff;
+}
+
+
+.Root a {
+    text-align: center;
+    color: #000;
+    text-decoration: none;
+    border: 1px solid #000;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: all 0.6s ease;
+}
+
+.Root a:hover {
+    background-color: #087cf7;
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .Root h1 {
+        font-size: 50px;
+    }
+
+    .Root .QuotesContainer {
+        width: 80%;
+        padding: 60px;
+    }
+
+    .Root .QuotesContainer .content,
+    .Root .QuotesContainer .Author {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 768px) {
+    .Root {
+        gap: 30px;
+    }
+
+    .Root h1 {
+        font-size: 40px;
+    }
+
+    .Root .QuotesContainer {
+        width: 90%;
+        padding: 40px;
+    }
+
+    .Root .QuotesContainer .content,
+    .Root .QuotesContainer .Author {
+        font-size: 22px;
+        padding: 15px;
+    }
+
+    .Root .ShareNextContainer {
+        gap: 30px;
+    }
+
+    .Root .ShareNextContainer .btn-1,
+    .Root .ShareNextContainer .btn-2 {
+        font-size: 16px;
+        padding: 12px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .Root {
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .Root h1 {
+        font-size: 30px;
+    }
+
+    .Root .QuotesContainer {
+        width: 95%;
+        min-height: 30vh;
+        padding: 20px;
+    }
+
+    .Root .QuotesContainer .content,
+    .Root .QuotesContainer .Author {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .Root .ShareNextContainer {
+        gap: 20px;
+        flex-direction: column;
+    }
+
+    .Root .ShareNextContainer .btn-1 {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    .Root .ShareNextContainer .btn-2 {
+        font-size: 12px;
+        padding: 8px 20px;
+    }
+
+
+}

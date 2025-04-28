@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Books Library</h1>
+            <div class="controls">
+                <div class="view-toggle">
+                    <button id="gridView" class="active">Grid</button>
+                    <button id="listView">List</button>
+                </div>
+                <div class="search-sort">
+                    <input type="text" id="searchInput" placeholder="Search by title or author...">
+                    <select id="sortSelect">
+                        <option value="">Sort by...</option>
+                        <option value="title">Title</option>
+                        <option value="date">Published Date</option>
+                    </select>
+                </div>
+
+            </div>
+        </header>
+        <main id="booksContainer" class="grid-view"></main>
+        <div id="loader" class="hidden">Loading...</div>
+    </div>
+    <div id="bookModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
