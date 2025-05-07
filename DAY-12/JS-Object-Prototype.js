@@ -10,8 +10,8 @@ class Person {
 }
 
 const Obj2 = {
-  fname: "Anirudh",
-  lName: "Jawala",
+  fname: "Sumit",
+  lName: "Sharma",
 };
 
 const p1 = new Person("Hitesh", 29);
@@ -24,3 +24,7 @@ console.log(p1.getFullName());
 
 // Arr.push(1);
 // console.log(Arr);
+(function(){
+  console.log("sumit");
+  
+})
