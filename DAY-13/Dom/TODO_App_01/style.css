@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #242a39;
+    color: white;
+}
+
+nav h1 {
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+nav h3 {
+    font-size: 2.8rem;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+#CreateTaskIcon {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    font-size: 5.8rem;
+    font-weight: 100;
+    cursor: pointer;
+    color: red;
+}
+
+#CreateTaskIcon:hover {
+    color: #242a39;
+}
+
+#addTask {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 100px;
+    background-color: #263048;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-radius: 10px;
+
+}
+
+#addTask input {
+    width: 80%;
+    height: 50px;
+    border: none;
+    outline: none;
+    background-color: #263048;
+    color: white;
+    font-size: 1.2rem;
+}
+
+#addTask button {
+    width: 100px;
+    height: 50px;
+    border: none;
+    outline: none;
+    background-color: #263048;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#addTask button:active {
+    scale: 1.2;
+}
+
+#container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+#Tasks {
+    width: 450px;
+    background-color: #242a39;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    color: #fff;
+}
+
+#Tasks p {
+    font-size: 25px;
+
+}
+
+#Tasks #delEditRead {
+    font-size: 25px;
+    height: 100%;
+    display: flex;
+    border-left: 1px solid white;
+    padding-left: 10px;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#Tasks #delEditRead h4 {
+    font-weight: 100;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+}
+
+#Tasks #delEditRead #Delete:hover {
+    color: red;
+}
+
+#Tasks #delEditRead #Update:hover {
+    color: rgb(255, 215, 15);
+}
+
+#Tasks #delEditRead #Check:hover {
+    color: rgb(44, 243, 9);
+}
+
+.Checked {
+    text-decoration: line-through;
+    color: green;
+}
