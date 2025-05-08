@@ -80,16 +80,24 @@
 // console.log(result4);
 // console.log(result5);
 
-// comparation Operator
-let X = 34;
-let Y = "87";
-console.log(X === Y); // it  is check the data is equal and dataType also
-console.log(X == Y); //  it is check the data is equal not it not check dataType
-console.log(X != Y); //  it is check not equal to
-console.log(X > Y);
-console.log(X < Y);
-console.log(X <= Y);
-console.log(X >= Y);
+// // comparation Operator
+// let X = 34;
+// let Y = "87";
+// console.log(X === Y); // it  is check the data is equal and dataType also
+// console.log(X == Y); //  it is check the data is equal not it not check dataType
+// console.log(X != Y); //  it is check not equal to
+// console.log(X > Y);
+// console.log(X < Y);
+// console.log(X <= Y);
+// console.log(X >= Y);
 
-// Js ke liye : Math or Date  ke sath khelo jindagi Assan hogi
-// Node ke liye : crypto or http  ke sath khelo jindagi Assan hogi
+// // Js ke liye : Math or Date  ke sath khelo jindagi Assan hogi
+// // Node ke liye : crypto or http  ke sath khelo jindagi Assan hogi
+
+// ------
+
+// concatinating
+let firstName = "Sumit";
+let LastName = "Sharma";
+let fullName = firstName + " " + LastName;
+console.log(fullName);
