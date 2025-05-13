@@ -45,11 +45,23 @@ const ChaiRecip = {
   Instruction: "Boil water, add tea leaves, add spices, add milk, add suger",
 };
 
-console.log(ChaiRecip.Ingrident.spices[0]);
+// console.log(ChaiRecip.Ingrident.spices[0]);
 
 const UpdatedChaiRecipe = {
   ...ChaiRecip,
   Instruction:
     "Boil water, add tea leaves, add spices, add milk, add suger with some love",
 };
-console.log(UpdatedChaiRecipe);
+// console.log(UpdatedChaiRecipe);
+
+// destructuring In Array
+const [one, two, three] = chaiArray;
+// console.log(one);
+// console.log(two);
+// console.log(three);
+// destructuring In Object
+const { Name, Origin, Type, Caffeine } = ChaiRecip;
+// console.log(Name);
+// console.log(Origin);
+// console.log(Type);
+// console.log(Caffeine);
