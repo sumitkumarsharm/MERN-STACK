@@ -1,17 +1,17 @@
-// function greet(name) {
-//   //   console.log(`Hello, ${name}`);
-// }
-// greet("Sumit");
-// greet("Ajay");
+function greet(name) {
+  //   console.log(`Hello, ${name}`);
+}
+greet("Sumit");
+greet("Ajay");
 
-// let globelScope = "I am Golbal";
-// function modifyGlobal() {
-//   globelScope = "I am modified";
-//   let scopeVariable = "I am block-scope variable";
-//   console.log(scopeVariable);
-// }
+let globelScope = "I am Golbal";
+function modifyGlobal() {
+  globelScope = "I am modified";
+  let scopeVariable = "I am block-scope variable";
+  console.log(scopeVariable);
+}
 
-// // modifyGlobal();
+// modifyGlobal();
 
 const person1 = {
   name: "Sumit",
