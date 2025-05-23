@@ -17,7 +17,24 @@ const App = () => {
         React.createElement("h4", null, "Contect"),
         React.createElement("h4", null, "Login")
       )
-    )
+    ),
+    React.createElement("h1", {}, "Chai variation by chai code"),
+    React.createElement("br", null),
+    React.createElement("div", {}, React.createElement(Chai))
+  );
+};
+
+const Chai = () => {
+  return React.createElement(
+    "div",
+    { id: "chai" },
+    React.createElement("h1", null, "Ginger cahi"),
+    React.createElement("br", null),
+    React.createElement("h1", null, "Massala cahi"),
+    React.createElement("br", null),
+    React.createElement("h1", null, "Lemon cahi"),
+    React.createElement("br", null),
+    React.createElement("h1", null, "Black cahi")
   );
 };
 
