@@ -5,11 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.27.2/babel.min.js"></script>
 </head>
 
 <body>
+
     <h1>Sumit sharma</h1>
-    <script src="src/script.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+        const Chai = ({ name, price }) => (
+            <div id="chai">
+                <h1>{name}</h1>
+                <h3>{price}</h3>
+            </div>
+        )
+
+        const App = () => {
+            return (
+                <div>
+                    <h1>Chai aur Cohort</h1>
+                    <h1>Chai variation by chai code</h1>
+                    <br />
+                    <Chai name="Masala Tea" price="1200" />
+                    <Chai name="Lemon Tea" price="2000" />
+                    <Chai name="Ginger Tea" price="200" />
+                </div>
+            )
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App />);
+
+    </script>
+
 </body>
 
 </html>
