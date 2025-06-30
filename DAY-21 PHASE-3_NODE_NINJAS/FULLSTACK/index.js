@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import DB from "./utils/db.js";
 
+// import all routes
+import userRouter from "./routes/user.routes.js";
+
 // dotenv package ko use krke environment variable ko access kr skte hai
 dotenv.config();
 
@@ -27,20 +30,11 @@ app.use(
 const port = process.env.PORT || 8080; // common port : 3000, 8080, 8000, 4000, 5000,5173
 // busy port : 80, 443, 22,
 
-app.get("/", (req, res) => {
-  res.send("Hello Chai aur code!!");
-});
-
-app.get("/about", (req, res) => {
-  res.send("This is About page");
-});
-
-app.get("/contact", (req, res) => {
-  res.send("This is contact page");
-});
-
 // connect the db
 DB();
+
+// userRoutes
+app.use("/api/v1/users/", userRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
