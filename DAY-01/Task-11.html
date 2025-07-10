@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohort Task - Form, Video & Canvas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            padding: 8px;
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Cohort Task - Form, Video & Canvas</h1>
+
+    <!-- 1. Form with email, date, and color -->
+    <form>
+        <label for="email">Email (required):</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" />
+
+        <label for="color">Favorite Color:</label>
+        <input type="color" id="color" name="color" />
+
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- 2. Embedded video with poster and controls -->
+    <h2>Watch This Demo Video</h2>
+    <video width="600" controls poster="https://via.placeholder.com/600x300.png?text=Video+Loading...">
+        <source src="sampl" type="video/mp4">

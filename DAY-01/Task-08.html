@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohort Task - Semantic Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+
+        main {
+            display: flex;
+            padding: 20px;
+            flex: 1;
+        }
+
+        section {
+            flex: 2;
+            margin-right: 20px;
+        }
+
+        aside {
+            flex: 1;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 1px solid #ccc;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        article {
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        article header,
+        article footer {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header and Navigation -->
+    <header>
+        <h1>My Cohort Blog</h1>
+        <nav aria-label="Main navigation">
+            <a href="#">Home</a>
+            <a href="#">Articles</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content with Section and Sidebar -->
+    <main>
+        <section>
+            <article>
+                <header>
+                    <h2>Learning Semantic HTML</h2>
+                    <p>Posted on July 10, 2025 by Sumit</p>
+                </header>
+                <p>
+                    Semantic HTML helps create meaningful web structure. It improves accessibility and SEO by using
+                    elements
+                    like <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, and <code>&lt;nav&gt;</code>.
+                </p>
+                <footer>
+                    Tags: HTML, Accessibility, Semantics
+                </footer>
+            </article>
+
+            <article>
+                <header>
+                    <h2>Why Use ARIA Labels?</h2>
+                    <p>Posted on July 9, 2025 by Sumit</p>
+                </header>
+                <p>
+                    ARIA labels provide screen readers with context that improves navigation for users with
+                    disabilities.
+                </p>
+                <footer>
+                    Tags: ARIA, Web Accessibility
+                </footer>
+            </article>
+        </section>
+
+        <!-- Sidebar -->
+        <aside>
+            <h3>Related Links</h3>
+            <ul>
+                <li><a href="#">HTML Reference</a></li>
+                <li><a href="#">ARIA Guidelines</a></li>
+                <li><a href="#">Accessibility Tips</a></li>
+            </ul>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 My Cohort Blog. All rights reserved.
+    </footer>
+
+</body>
+
+</html>

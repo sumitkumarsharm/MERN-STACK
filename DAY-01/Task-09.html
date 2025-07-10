@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohort Task - Multimedia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 30px;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Multimedia Task - Cohort</h1>
+
+    <!-- 1. Embed video with controls, autoplay, poster, and subtitles -->
+    <h2>HTML5 Video</h2>
+    <video width="640" controls autoplay poster="poster.jpg">
+        <source src="video.mp4" type="video/mp4">
+        <source src="video.webm" type="video/webm">
+        <track src="subtitles.vtt" kind="subtitles" srclang="en" label="English">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- 2. Audio player with two formats -->
+    <h2>Audio Player</h2>
+    <audio controls>
+        <source src="audio.mp3" type="audio/mp3">
+        <source src="audio.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- 3. Embed YouTube video using iframe -->
+    <h2>YouTube Embed</h2>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player"
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+
+    <!-- 4. Table listing video/audio formats -->
+    <h2>Common Video and Audio Formats</h2>
+    <table>
+        <tr>
+            <th>Format</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>MP4</td>
+            <td>Video</td>
+            <td>Most widely supported video format for web, mobile, and desktop devices.</td>
+        </tr>
+        <tr>
+            <td>WebM</td>
+            <td>Video</td>
+            <td>Open, royalty-free format designed for web video streaming.</td>
+        </tr>
+        <tr>
+            <td>MP3</td>
+            <td>Audio</td>
+            <td>Popular compressed audio format supported by all modern browsers and devices.</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

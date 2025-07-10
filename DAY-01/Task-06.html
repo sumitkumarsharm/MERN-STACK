@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohort Task - Tables</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-bottom: 30px;
+        }
+
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        caption {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Tables Task for Cohort</h1>
+
+    <!-- 1. Basic table with three columns and three rows -->
+    <h2>City Information</h2>
+    <table>
+        <tr>
+            <th>City</th>
+            <th>Country</th>
+            <th>Population</th>
+        </tr>
+        <tr>
+            <td>New York</td>
+            <td>USA</td>
+            <td>8,500,000</td>
+        </tr>
+        <tr>
+            <td>Mumbai</td>
+            <td>India</td>
+            <td>20,400,000</td>
+        </tr>
+        <tr>
+            <td>Tokyo</td>
+            <td>Japan</td>
+            <td>13,960,000</td>
+        </tr>
+    </table>
+
+    <!-- 2. Table with a caption -->
+    <h2>Favorite Foods</h2>
+    <table>
+        <caption>My Favorite Foods and Categories</caption>
+        <tr>
+            <th>Food</th>
+            <th>Category</th>
+        </tr>
+        <tr>
+            <td>Paneer Tikka</td>
+            <td>Vegetarian</td>
+        </tr>
+        <tr>
+            <td>Chocolate Cake</td>
+            <td>Dessert</td>
+        </tr>
+        <tr>
+            <td>Mango Shake</td>
+            <td>Beverage</td>
+        </tr>
+    </table>
+
+    <!-- 3. Complex table with rowspan and colspan -->
+    <h2>Weekly Schedule</h2>
+    <table>
+        <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Activity</th>
+        </tr>
+        <tr>
+            <td rowspan="2">Monday</td>
+            <td>Morning</td>
+            <td>Gym</td>
+        </tr>
+        <tr>
+            <td>Evening</td>
+            <td>React Practice</td>
+        </tr>
+        <tr>
+            <td>Tuesday</td>
+            <td colspan="2">Full Day Project Work</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Wednesday</td>
+            <td>Morning</td>
+            <td>Study Redux</td>
+        </tr>
+        <tr>
+            <td>Evening</td>
+            <td>Watch Tutorial</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
