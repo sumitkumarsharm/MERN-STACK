@@ -3,6 +3,7 @@ import User from "../model/user.model.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
+// User Registration
 const registerUser = async (req, res) => {
 
     // All steps for user registration
@@ -104,4 +105,43 @@ const registerUser = async (req, res) => {
 };
 
 
-export { registerUser };
+// User verification
+const verifyUser = async (req, res) => {
+    // get data from url
+    // validate
+    // find user based on token
+    // is verified field  to true
+    // remove verification token
+    // save the user
+    // return sucess message
+
+    const { token } = req.params;
+    console.log(token);
+    if (!token) {
+        res.status(400).json({
+            message: "Invalid Token",
+            success: false
+        });
+    }
+
+    const user = await User.findOne({ verificationToken: token })
+
+    if (!user) {
+        res.status(400).json({
+            message: "Invalid Token",
+            success: false
+        });
+    }
+    user.isVerified = true;
+    user.verificationToken = undefined
+
+    await user.save();
+
+    res.status(200).json({
+        message: "User verified successfully",
+        success: true
+    });
+}
+
+
+export { registerUser, verifyUser };
