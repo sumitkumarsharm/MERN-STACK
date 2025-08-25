@@ -33,7 +33,6 @@ const registerUser = async (req, res) => {
             });
         }
 
-
         // create user in database
         const user = await User.create({
             name,
@@ -103,7 +102,6 @@ const registerUser = async (req, res) => {
         });
     }
 };
-
 
 // User verification
 const verifyUser = async (req, res) => {
