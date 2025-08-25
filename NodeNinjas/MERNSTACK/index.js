@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import db from "./utils/db.js"
+import userRoutes from "./routes/user.route.js"
 
 
 dotenv.config()
@@ -17,14 +18,13 @@ app.use(cors({
 app.use(express.json()) // Body parser middleware
 app.use(express.urlencoded({ extended: true })) // URL-encoded parser middleware
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
 
 
 // calling Database
 db();
 
+// User routes
+app.use('/api/users', userRoutes);
 
 // listing the server or start the server
 app.listen(port, () => {
