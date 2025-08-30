@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import AboutTeam from './components/Team'
 import AboutTeamMember from './components/AboutOurCompany'
 import Github from './components/Github'
+import User from './components/User'
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/about/company" element={<AboutTeamMember />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about/user/:id" element={<User />} />
         <Route path="/github" element={<Github />} />
       </Route>
     </Routes>
