@@ -4,6 +4,7 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 
 // User Registration
 const registerUser = async (req, res) => {
@@ -54,8 +55,6 @@ const registerUser = async (req, res) => {
 
         user.verificationToken = Token;
 
-
-        console.log(user);
         // console.log(Token);
 
 
@@ -80,7 +79,7 @@ const registerUser = async (req, res) => {
             from: process.env.MAILTRAP_SENDEREMAIL,
             to: user.email,
             subject: "Please verify your email",
-            text: `please click on the following link : ${process.env.BASE_URL}/api/user/verify/${Token}`,
+            text: `please click on the following link : ${process.env.BASE_URL}/api/users/verify/${Token}`,
             html: `<p>Your verification token is <strong>${Token}</strong></p>`,
         };
 
@@ -117,7 +116,7 @@ const verifyUser = async (req, res) => {
 
     const { token } = req.params;
 
-    console.log(token);
+
     if (!token) {
         res.status(400).json({
             message: "Invalid Token",
@@ -160,11 +159,23 @@ const loginUser = async (req, res) => {
         });
     }
 
+
+    // verifing the user
+
+
     try {
         const user = await User.findOne({ email })
         if (!user) {
             return res.status(404).json({
                 message: "Invalid email or password",
+                success: false
+            });
+        }
+
+
+        if (!user.isVerified) {
+            return res.status(401).json({
+                message: "Please verify your email",
                 success: false
             });
         }
@@ -183,24 +194,41 @@ const loginUser = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.jwt_secret, { expiresIn: "1h" })
         // console.log(token);
 
-        res.cookie("token", token);
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+            maxAge: 3600000 // 1 hour
+        }
+
+        res.cookie("token", token, cookieOptions);
+
 
         res.status(200).json({
             message: "Login successful",
             success: true,
-            token
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                isVerified: user.isVerified,
+
+            }
         });
 
-
-
-
-
-
     } catch (error) {
+        res.status(401).json({
+            message: "Login failed",
+            success: false,
+            error: error.message
+        });
 
     }
 
 }
+
+
+// 
 
 
 export { registerUser, verifyUser, loginUser };
