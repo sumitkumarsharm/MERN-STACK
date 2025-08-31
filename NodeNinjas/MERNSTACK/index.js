@@ -3,10 +3,13 @@ import dotenv from "dotenv"
 import cors from "cors"
 import db from "./utils/db.js"
 import userRoutes from "./routes/user.route.js"
+import cookieParser from "cookie-parser"
 
 const app = express()
 const port = process.env.PORT || 4000
 
+
+app.use(cookieParser())
 
 dotenv.config()
 app.use(express.json()) // Body parser middleware

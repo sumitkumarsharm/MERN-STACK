@@ -3,6 +3,7 @@ import User from "../model/user.model.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
+import cookieParser from "cookie-parser";
 
 // User Registration
 const registerUser = async (req, res) => {
@@ -115,6 +116,7 @@ const verifyUser = async (req, res) => {
     // return sucess message
 
     const { token } = req.params;
+
     console.log(token);
     if (!token) {
         res.status(400).json({
@@ -148,41 +150,56 @@ const loginUser = async (req, res) => {
     // find the data to database
     // check password matched or not
     // create and send token
-    // 
 
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({
-            message: "All fields are required"
+        res.status(400).json({
+            message: "Email and password are required",
+            success: false
         });
     }
 
     try {
         const user = await User.findOne({ email })
-
         if (!user) {
-            return res.status(401).json({
-                message: "Invalid email or password"
+            return res.status(404).json({
+                message: "Invalid email or password",
+                success: false
             });
         }
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password)
 
-        if (!isValidPassword) {
-            return res.status(401).json({
-                message: "Invalid email or password"
+        // console.log(isMatch);
+
+        if (!isMatch) {
+            return res.status(404).json({
+                message: "Invalid email or password",
+                success: false
             });
         }
+
+        const token = jwt.sign({ id: user._id }, process.env.jwt_secret, { expiresIn: "1h" })
+        // console.log(token);
+
+        res.cookie("token", token);
+
+        res.status(200).json({
+            message: "Login successful",
+            success: true,
+            token
+        });
+
+
+
+
 
 
     } catch (error) {
-        return res.status(500).json({
-            message: "Internal Server Error",
-            success: false,
-            error: error.message
-        });
+
     }
+
 }
 
 
