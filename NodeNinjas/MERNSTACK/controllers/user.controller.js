@@ -228,7 +228,42 @@ const loginUser = async (req, res) => {
 }
 
 
-// 
+// profile controller
 
+const getMe = async (req, res) => {
 
-export { registerUser, verifyUser, loginUser };
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+const logOutUser = async (req, res) => {
+
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+const forgotPassword = async (req, res) => {
+
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+const resetPassword = async (req, res) => {
+
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+export { registerUser, verifyUser, loginUser, logOutUser, forgotPassword };
