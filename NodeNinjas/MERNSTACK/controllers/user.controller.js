@@ -266,4 +266,4 @@ const resetPassword = async (req, res) => {
     }
 }
 
-export { registerUser, verifyUser, loginUser, logOutUser, forgotPassword };
+export { registerUser, verifyUser, loginUser, getMe, logOutUser, forgotPassword, resetPassword };
