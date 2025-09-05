@@ -11,7 +11,7 @@ const registerUser = async (req, res) => {
 
     // All steps for user registration
     // get data
-    // validate data
+    // validate data // validate mean user email sahi hai ya nhi password hai ya nhi hai
     // check if data is already registered ot not
     // create a user in database
     // create a verification token
@@ -229,10 +229,29 @@ const loginUser = async (req, res) => {
 
 
 // profile controller
-
 const getMe = async (req, res) => {
 
     try {
+        console.log(req.user);
+        const user = await User.findById(req.user.id).select("-password");
+        console.log(user);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        res.status(200).json({
+            message: "User found",
+            success: true,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                isVerified: user.isVerified,
+            }
+        })
 
     } catch (error) {
 
@@ -242,9 +261,18 @@ const getMe = async (req, res) => {
 const logOutUser = async (req, res) => {
 
     try {
+        res.cookie.Token = null
+        res.status(200).json({
+            message: "Logout successful",
+            success: true,
+        })
 
     } catch (error) {
-
+        res.status(500).json({
+            message: "Logout failed",
+            success: false,
+            error: error.message
+        })
     }
 }
 
