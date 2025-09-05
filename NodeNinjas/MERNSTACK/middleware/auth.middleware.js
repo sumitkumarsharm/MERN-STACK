@@ -18,12 +18,19 @@ export const isLoggedIn = async (req, res, next) => {
             });
         }
 
-        const data = jwt.verify(token, process.env.jwt_secret)
-        console.log(data);
+        const decoded = jwt.verify(token, process.env.jwt_secret)
+        console.log(decoded);
 
+        req.user = decoded;
+
+        next()
 
     } catch (error) {
-
+        console.log("Auth middleware error ", error);
+        return res.status(401).json({
+            message: "Unauthorized User",
+            success: false,
+        });
     }
 
 
