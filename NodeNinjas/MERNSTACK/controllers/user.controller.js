@@ -232,28 +232,37 @@ const loginUser = async (req, res) => {
 const getMe = async (req, res) => {
 
     try {
-        console.log(req.user);
         const user = await User.findById(req.user.id).select("-password");
-        console.log(user);
+
+        console.log("Servide");
+
         if (!user) {
+            console.log("Hello");
+
             return res.status(404).json({
                 message: "User not found",
                 success: false,
             });
         }
 
-        res.status(200).json({
-            message: "User found",
-            success: true,
-            user: {
-                id: user._id,
-                email: user.email,
-                name: user.name,
-                isVerified: user.isVerified,
-            }
-        })
+        return res.status(200).json(
+            {
+                message: "User found successfully",
+                success: true,
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    name: user.name,
+                    isVerified: user.isVerified,
+                }
+            })
 
     } catch (error) {
+        res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: error.message
+        })
 
     }
 }
@@ -266,6 +275,7 @@ const logOutUser = async (req, res) => {
             message: "Logout successful",
             success: true,
         })
+        console.log(res.cookie);
 
     } catch (error) {
         res.status(500).json({
@@ -277,21 +287,128 @@ const logOutUser = async (req, res) => {
 }
 
 const forgotPassword = async (req, res) => {
-
+    // get the email
+    // validate the email
+    // find the user based on email
+    // create reset password token + expiration time
+    // send email to user
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({
+            message: "Email is required",
+            success: false
+        });
+    }
     try {
+        const user = await User.findOne({ email });
+        console.log(" forgotcontroller User found :-->", user);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false
+            });
+        }
+        // create reset password token + expiration time
+        const resetPasswordToken = crypto.randomBytes(20).toString("hex");
+        console.log("resetPasswordToken forgotcontroller : --->", resetPasswordToken);
+
+        user.resetPasswordToken = resetPasswordToken;
+        user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+
+
+        // save the user
+        await user.save();
+
+        // send email to user
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAILTRAP_HOST,
+            port: process.env.MAILTRAP_PORT || 587,
+            secure: false,
+            auth: {
+                user: process.env.MAILTRAP_USER,
+                pass: process.env.MAILTRAP_PASS,
+            },
+        });
+
+
+        // Create the email options
+        const mailOptions = {
+            from: process.env.MAILTRAP_SENDEREMAIL,
+            to: user.email,
+            subject: "Please verify your email",
+            text: `please click on the following link : ${process.env.BASE_URL}/api/users/resetpassword/${resetPasswordToken}`,
+            html: `<p>Your verification token is <strong>${resetPasswordToken}</strong></p>`,
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions)
+
+        // const resetPasswordUrl = `http://localhost:3000/resetpassword/${resetPasswordToken}`;
+        // await sendEmail(user.email, "Password Reset", `Click on the link to reset your password: ${resetPasswordUrl}`);
+
+        return res.status(200).json({
+            message: "Password reset email sent",
+            success: true,
+            user
+        });
 
     } catch (error) {
-
+        res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: error.message
+        });
     }
 }
 
 const resetPassword = async (req, res) => {
 
+    // get the token and new password from url and body
+    // validate the data
+    // find the user based on token and make sure token is not expired
+
+    const { token } = req.params;
+    const { password } = req.body;
+
+    console.log("Token  resetPassword: --->", token);
+    console.log("New Password  resetPassword: --->", password);
+
     try {
+        if (!token || !password) {
+            return res.status(400).json({
+                message: "All fields are required",
+                success: false
+            });
+        }
+        const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+
+        console.log("User found  resetPassword: --->", user);
+
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid or expired token",
+                success: false,
+                user
+            });
+        }
+
+        // update the password
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+        // send success message
+        return res.status(200).json({
+            message: "Password reset successful",
+            success: true,
+            user
+        });
 
     } catch (error) {
 
     }
 }
 
-export { registerUser, verifyUser, loginUser, getMe, logOutUser, forgotPassword, resetPassword };
+export { registerUser, verifyUser, loginUser, getMe, logOutUser, resetPassword, forgotPassword };

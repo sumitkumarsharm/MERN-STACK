@@ -5,7 +5,7 @@ export const isLoggedIn = async (req, res, next) => {
     // check if token is valid
     // get the data from token
     try {
-        console.log(req.cookies);
+        // console.log(req.cookies);
         const token = req.cookies?.token
 
         console.log('Token found ', token ? "yes" : "No");
@@ -19,7 +19,7 @@ export const isLoggedIn = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.jwt_secret)
-        console.log(decoded);
+        // console.log(decoded);
 
         req.user = decoded;
 
