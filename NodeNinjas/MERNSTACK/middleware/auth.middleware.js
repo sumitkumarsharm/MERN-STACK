@@ -32,7 +32,4 @@ export const isLoggedIn = async (req, res, next) => {
             success: false,
         });
     }
-
-
-    next()
 }

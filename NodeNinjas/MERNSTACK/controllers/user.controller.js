@@ -230,35 +230,32 @@ const loginUser = async (req, res) => {
 
 // profile controller
 const getMe = async (req, res) => {
-
     try {
         const user = await User.findById(req.user.id).select("-password");
 
-        console.log("Servide");
+        console.log("Service");
 
         if (!user) {
             console.log("Hello");
-
             return res.status(404).json({
                 message: "User not found",
                 success: false,
             });
         }
 
-        return res.status(200).json(
-            {
-                message: "User found successfully",
-                success: true,
-                user: {
-                    id: user._id,
-                    email: user.email,
-                    name: user.name,
-                    isVerified: user.isVerified,
-                }
-            })
+        return res.status(200).json({
+            message: "User found successfully",
+            success: true,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                isVerified: user.isVerified,
+            }
+        })
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Server error",
             success: false,
             error: error.message
@@ -314,7 +311,7 @@ const forgotPassword = async (req, res) => {
         console.log("resetPasswordToken forgotcontroller : --->", resetPasswordToken);
 
         user.resetPasswordToken = resetPasswordToken;
-        user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+        user.resetPasswordExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
 
 
 
@@ -382,7 +379,7 @@ const resetPassword = async (req, res) => {
                 success: false
             });
         }
-        const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+        const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiry: { $gt: Date.now() } });
 
         console.log("User found  resetPassword: --->", user);
 
@@ -407,6 +404,11 @@ const resetPassword = async (req, res) => {
         });
 
     } catch (error) {
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: error.message
+        });
 
     }
 }
