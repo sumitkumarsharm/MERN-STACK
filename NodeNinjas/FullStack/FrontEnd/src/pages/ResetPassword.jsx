@@ -1,16 +1,15 @@
-// pages/ResetPassword.jsx
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/api";
 
 export default function ResetPassword() {
-  const { token } = useParams(); // usually /reset/:token
+  const { token } = useParams();
   const [password, setPassword] = useState("");
 
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      await api.post(`/auth/reset-password/${token}`, { password });
+      await api.post(`/resetpassword/${token}`, { password });
       alert("Password reset successful!");
     } catch (err) {
       alert(err.response?.data?.message || "Reset failed");

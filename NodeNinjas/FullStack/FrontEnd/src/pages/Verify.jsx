@@ -1,24 +1,15 @@
-// pages/Verify.jsx
-import { useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import api from "../api/api";
 
 export default function Verify() {
-  const [code, setCode] = useState("");
+  const { token } = useParams();
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post("/auth/verify", { code });
-      alert("Account verified!");
-    } catch (err) {
-      alert(err.response?.data?.message || "Verification failed");
-    }
-  };
+  useEffect(() => {
+    api.get(`/verify/${token}`)
+      .then(() => alert("Account verified! You can now login."))
+      .catch(() => alert("Verification failed"));
+  }, [token]);
 
-  return (
-    <form onSubmit={handleVerify}>
-      <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Verification Code" />
-      <button type="submit">Verify</button>
-    </form>
-  );
+  return <h2>Verifying account...</h2>;
 }

@@ -1,4 +1,3 @@
-// pages/Profile.jsx
 import { useEffect, useState } from "react";
 import api from "../api/api";
 
@@ -6,12 +5,13 @@ export default function Profile() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    api.get("/auth/me")
+    api.get("/profile")
       .then((res) => setUser(res.data))
-      .catch((err) => console.error(err));
+      .catch(() => setUser(null));
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await api.post("/logout");
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
@@ -20,7 +20,7 @@ export default function Profile() {
 
   return (
     <div>
-      <h2>Welcome, {user.email}</h2>
+      <h2>Welcome {user.email}</h2>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );

@@ -1,4 +1,3 @@
-// pages/ForgotPassword.jsx
 import { useState } from "react";
 import api from "../api/api";
 
@@ -8,10 +7,10 @@ export default function ForgotPassword() {
   const handleForgot = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/forgot-password", { email });
-      alert("Reset link sent to your email!");
+      await api.post("/forgotpassword", { email });
+      alert("Reset link sent!");
     } catch (err) {
-      alert(err.response?.data?.message || "Error");
+      alert(err.response?.data?.message || "Failed");
     }
   };
 

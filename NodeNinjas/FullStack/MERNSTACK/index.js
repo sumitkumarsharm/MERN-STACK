@@ -18,9 +18,10 @@ app.use(express.urlencoded({ extended: true })) // URL-encoded parser middleware
 app.use(cookieParser())
 
 app.use(cors({
-    origin: process.env.BASE_URL, // AGR Multiple origins allow krna chahte hai toh isme array de sakte hai
+   origin: process.env.BASE_URL || "http://localhost:5173", 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true   
 }))
 
 
