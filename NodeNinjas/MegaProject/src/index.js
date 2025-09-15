@@ -8,9 +8,7 @@ const PORT = process.env.PORT || 8080;
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
   })
   .catch((err) => {
     console.error("Error in Connecting MongoDB", err);
