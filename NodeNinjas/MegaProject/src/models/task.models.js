@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {AvialableTaskStatus,taskStatusEnum} from "../utils/constants.js"
+import { AvialableTaskStatus, taskStatusEnum } from "../utils/constants.js";
 
 const taskSchema = new mongoose.Schema(
   {
@@ -28,11 +28,21 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    status :{
-        type : String,
-        enum : AvialableTaskStatus,
-        default : taskStatusEnum.TODO
-    }
+    status: {
+      type: String,
+      enum: AvialableTaskStatus,
+      default: taskStatusEnum.TODO,
+    },
+    attachments: {
+      type: [
+        {
+          url: String,
+          mimetype: String,
+          size: Number,
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true },
 );
