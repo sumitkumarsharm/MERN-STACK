@@ -1,9 +1,8 @@
 function asyncHandler(requestHandler) {
-    return function(req,res,next){
-        Promise.resolve(requestHandler())
-        .catch((err)=>{
-            next(err);
-        })
-    }
+  return function (req, res, next) {
+    Promise.resolve(requestHandler(req, res, next)).catch(function (err) {
+      next(err);
+    });
+  };
 }
-export {asyncHandler}
+export { asyncHandler };
