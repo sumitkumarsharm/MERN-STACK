@@ -9,7 +9,7 @@ dotenv.config({
 const PORT = process.env.PORT || 8000;
 
 connedDB()
-    .then(()=>{
+    .then(()=>{ 
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`)
         });
