@@ -1,63 +1,66 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new Schema({
-    avatar :{
-        type : {
-            url : String,
-            loaclpath : String
-        },
-        default : {
-            url : "https://placehold.com/600x400",
-            loaclpath : ""
-        }
+const userSchema = new Schema(
+  {
+    avatar: {
+      type: {
+        url: String,
+        loaclpath: String,
+      },
+      default: {
+        url: "https://placehold.com/600x400",
+        loaclpath: "",
+      },
     },
-    username :{
-        type : String,
-        required : true,
-        unique : true,
-        trim : true,
-        index: true
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      index: true,
     },
-    email :{
-        type : String,
-        required : true,
-        unique : true,
-        trim : true,
-        lowercase : true,
-        index:true
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      index: true,
     },
-    fullname : {
-        type : String,
-        required : true
+    fullname: {
+      type: String,
+      required: true,
     },
-    password :{
-        type : String,
-        unique : true,
-        required : true,
-        trim : true
+    password: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
     },
-    isEmailVerified : {
-        type:Boolean,
-        default : false
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
-    forgotPasswordToken : {
-        type:Boolean,
-        default : false
+    forgotPasswordToken: {
+      type: Boolean,
+      default: false,
     },
-    forgotPasswordTokenExpiry : {
-        type : Date,
+    forgotPasswordTokenExpiry: {
+      type: Date,
     },
-    refreshToken : {
-        type : String
+    refreshToken: {
+      type: String,
     },
-    emailVerificationToken : {
-        type : String
+    emailVerificationToken: {
+      type: String,
     },
-    emailVerificationTokenExpiry : {
-        type : Date
+    emailVerificationTokenExpiry: {
+      type: Date,
     },
-},{timestamps:true})
+  },
+  { timestamps: true },
+);
 
 // making hooks
 
@@ -103,5 +106,4 @@ userSchema.methods.generateVerificationToken = function () {
   };
 };
 
-
-export const User =  mongoose.model('User', userSchema)
+export const User = mongoose.model("User", userSchema);
