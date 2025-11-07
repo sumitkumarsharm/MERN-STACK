@@ -85,12 +85,14 @@ userSchema.methods.generateAccessToken = function () {
   });
 };
 
+// generating refresh token
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: process.env.REFRESH_TOKEN_EXPIRE,
   });
 };
 
+// generating verification token
 userSchema.methods.generateVerificationToken = function () {
   const unHeshedToken = crypto.randomBytes(32).toString("hex");
   const hashedToken = crypto
