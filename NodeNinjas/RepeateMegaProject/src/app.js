@@ -1,10 +1,10 @@
-import express from 'express'
+import express from "express";
 
-const app = express()
+const app = express();
 
 // routes import
-import helthCheckRoutes from './routes/helthcheck.routes.js'
+import helthCheckRoutes from "./routes/helthcheck.routes.js";
 
-app.use('/api/v1/helthcheck',helthCheckRoutes);
+app.use("/api/v1/helthcheck", helthCheckRoutes);
 
 export default app;

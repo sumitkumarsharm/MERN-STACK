@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import { AvailableUserRole, UserRoleEnum } from "../utils/constants";
 
 const userSchema = new Schema(
   {
@@ -20,6 +21,14 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
+    firstname: {
+      type: String,
+      trim: true,
+    },
+    lastname: {
+      type: String,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -28,14 +37,19 @@ const userSchema = new Schema(
       lowercase: true,
       index: true,
     },
-    fullname: {
-      type: String,
-      required: true,
-    },
     password: {
       type: String,
       unique: true,
       required: true,
+      trim: true,
+    },
+    role: {
+      type: String,
+      enum: AvailableUserRole,
+      default: UserRoleEnum.MEMBER,
+    },
+    mobile: {
+      type: String,
       trim: true,
     },
     isEmailVerified: {
