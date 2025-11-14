@@ -4,5 +4,4 @@ const register = asyncHandler(async (req, res) => {
   const { email, password, firstname, lastname, username, role, mobile } =
     req.body;
 });
-
 export { register };
