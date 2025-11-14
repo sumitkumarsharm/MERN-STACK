@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { AvailableTaskStatus, AvailableUserRole } from "../utils/constants.js";
 
 const userRegistrationValidatorSchema = () => {
   return [
@@ -67,7 +68,7 @@ const userRegistrationValidatorSchema = () => {
     body("role")
       .notEmpty()
       .withMessage("Role is required.")
-      .isIn(["admin", "user", "manager", "moderator"])
+      .isIn(AvailableUserRole)
       .withMessage("Invalid role selected."),
 
     // for Mobile validation

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import { AvailableUserRole, UserRoleEnum } from "../utils/constants";
+import { AvailableUserRole, UserRoleEnum } from "../utils/constants.js";
 
 const userSchema = new Schema(
   {
