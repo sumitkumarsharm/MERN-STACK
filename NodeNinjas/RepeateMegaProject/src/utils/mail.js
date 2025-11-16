@@ -1,8 +1,8 @@
 import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
-import { ApiError } from "./api-error";
+import { ApiError } from "./api-error.js";
 
-const sendMail = async (options) => {
+export const sendMail = async (options) => {
   const generateMail = new Mailgen({
     theme: "default",
     product: {
@@ -11,8 +11,8 @@ const sendMail = async (options) => {
     },
   });
 
-  const planeText = mailGenerator.generatePlaintext(options.maiGenContent);
-  const htmlText = mailGenerator.generate(options.maiGenContent);
+  const planeText = generateMail.generatePlaintext(options.mailGenContent);
+  const htmlText = generateMail.generate(options.mailGenContent);
 
   const transporter = nodemailer.createTransport({
     host: process.env.MAILTRAP_HOST,
@@ -56,7 +56,7 @@ const buildEmailTemplate = (username, intro, buttonText, actionUrl, outro) => ({
   },
 });
 
-const emailVerifyContent = (username, verificationUrl) => {
+export const emailVerifyContent = (username, verificationUrl) => {
   return buildEmailTemplate(
     username,
     "Welcome! Please verify your email to activate your Task Management System account.",
