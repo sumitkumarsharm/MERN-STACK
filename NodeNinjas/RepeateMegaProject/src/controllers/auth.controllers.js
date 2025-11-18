@@ -85,23 +85,43 @@ const verifyUserEmail = asyncHandler(async (req, res) => {
 // <----------------------- Login User ----------------------->
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
 
-  const user = await User.findOne({ email });
-
-  console.log("user ----> ", user);
+  const user = await User.findOne({
+    $or: [{ email }, { username }],
+  });
 
   if (!user) {
     return res.status(404).json(new ApiError(404, "User not found", false));
   }
 
-  const isPasswordMatched = await user.isPasswordMatched(password);
+  const ok = await user.isPasswordMatched(password);
 
-  if (!isPasswordMatched) {
+  if (!ok) {
     return res
-      .status(401)
-      .json(new ApiError(401, "Invalid credentials", false));
+      .status(404)
+      .json(new ApiError(404, "Invalid credentials", false));
   }
+
+  const accessToken = await user.generateAccessToken();
+  const refreshToken = await user.generateRefreshToken();
+
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    maxAge: 60 * 60 * 1000,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: true,
+    sameSite: "strict",
+  });
 
   const sanitizedUser = {
     _id: user._id,
