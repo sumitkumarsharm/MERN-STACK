@@ -86,14 +86,41 @@ const verifyUserEmail = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  console.log("user ----> ", user);
+
+  if (!user) {
+    return res.status(404).json(new ApiError(404, "User not found", false));
+  }
+
+  const isPasswordMatched = await user.isPasswordMatched(password);
+
+  if (!isPasswordMatched) {
+    return res
+      .status(401)
+      .json(new ApiError(401, "Invalid credentials", false));
+  }
+
+  const sanitizedUser = {
+    _id: user._id,
+    email: user.email,
+    username: user.username,
+    role: user.role,
+    isEmailVerified: user.isEmailVerified,
+  };
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "User logged in successfully", sanitizedUser));
 });
 
-// <----------------------- Login User ----------------------->
+// <----------------------- logOutUser ----------------------->
 
-// const logOutUser = asyncHandler(async (req, res) => {
-//   const { email, password, firstname, lastname, username, role, mobile } =
-//     req.body;
-// });
+const logOutUser = asyncHandler(async (req, res) => {
+  const { user } = req.body;
+});
 
 // const resendVerificationEmail = asyncHandler(async (req, res) => {
 //   const { email, password, firstname, lastname, username, role, mobile } =
@@ -117,7 +144,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // });
 export {
   registerUser,
-  // loginUser,
+  loginUser,
   // logOutUser,
   verifyUserEmail,
   // resendVerificationEmail,

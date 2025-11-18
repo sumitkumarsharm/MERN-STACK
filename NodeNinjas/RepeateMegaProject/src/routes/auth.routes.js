@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { validate } from "../middlewares/validate.middlewares.js";
-import { userRegistrationValidatorSchema } from "../validators/auth.velidators.js";
 import {
+  userLoginValidatorSchema,
+  userRegistrationValidatorSchema,
+} from "../validators/auth.velidators.js";
+import {
+  loginUser,
   registerUser,
   verifyUserEmail,
 } from "../controllers/auth.controllers.js";
@@ -16,5 +20,7 @@ router.post(
 );
 
 router.post("/verify-email/:token", verifyUserEmail);
+
+router.post("/login", userLoginValidatorSchema(), validate, loginUser);
 
 export default router;
