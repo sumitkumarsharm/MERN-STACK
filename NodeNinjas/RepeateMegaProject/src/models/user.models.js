@@ -110,14 +110,10 @@ userSchema.methods.generateRefreshToken = function () {
 // generating verification token
 userSchema.methods.generateVerificationToken = function () {
   const unHeshedToken = crypto.randomBytes(32).toString("hex");
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(unHeshedToken)
-    .digest("hex");
+
   const tokenExpiry = Date.now() + 30 * 60 * 1000;
 
   return {
-    hashedToken,
     tokenExpiry,
     unHeshedToken,
   };

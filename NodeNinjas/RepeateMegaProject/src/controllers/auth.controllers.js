@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(409).json(new ApiResponse(409, "User already exists"));
+    return res.status(409).json(new ApiError(409, "User already exists"));
   }
 
   const user = await User.create({
@@ -27,10 +27,9 @@ const registerUser = asyncHandler(async (req, res) => {
     mobile,
   });
 
-  const { unHeshedToken, hashedToken, tokenExpiry } =
-    user.generateVerificationToken();
+  const { unHeshedToken, tokenExpiry } = user.generateVerificationToken();
 
-  user.emailVerificationToken = hashedToken;
+  user.emailVerificationToken = unHeshedToken;
   user.emailVerificationTokenExpiry = tokenExpiry;
 
   await user.save();
@@ -57,48 +56,73 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, "User created successfully", sanitizedUser));
 });
 
+// <------------------ verifiation ------------------>
+
 const verifyUserEmail = asyncHandler(async (req, res) => {
   const { token } = req.params;
-  console.log(token);
+
+  const user = await User.findOne({ emailVerificationToken: token });
+
+  if (!user) {
+    return res.status(404).json(new ApiError(404, "User not found", false));
+  }
+
+  if (user.emailVerificationTokenExpiry < Date.now()) {
+    return res.status(400).json(new ApiError(400, "Token expired", false));
+  }
+
+  user.emailVerificationToken = undefined;
+  user.emailVerificationTokenExpiry = undefined;
+  user.isEmailVerified = true;
+
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Email verified successfully", true));
 });
+
+// <----------------------- Login User ----------------------->
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
-const logOutUser = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
+  const { email, password } = req.body;
 });
 
-const resendVerificationEmail = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
-const refreshAccessToken = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
-const forgetPasswordRequest = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
-const changeCurrentPassword = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
-const getCurrentUser = asyncHandler(async (req, res) => {
-  const { email, password, firstname, lastname, username, role, mobile } =
-    req.body;
-});
+// <----------------------- Login User ----------------------->
+
+// const logOutUser = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
+
+// const resendVerificationEmail = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
+// const refreshAccessToken = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
+// const forgetPasswordRequest = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
+// const changeCurrentPassword = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
+// const getCurrentUser = asyncHandler(async (req, res) => {
+//   const { email, password, firstname, lastname, username, role, mobile } =
+//     req.body;
+// });
 export {
   registerUser,
-  loginUser,
-  logOutUser,
+  // loginUser,
+  // logOutUser,
   verifyUserEmail,
-  resendVerificationEmail,
-  refreshAccessToken,
-  forgetPasswordRequest,
-  changeCurrentPassword,
-  getCurrentUser,
+  // resendVerificationEmail,
+  // refreshAccessToken,
+  // forgetPasswordRequest,
+  // changeCurrentPassword,
+  // getCurrentUser,
 };
