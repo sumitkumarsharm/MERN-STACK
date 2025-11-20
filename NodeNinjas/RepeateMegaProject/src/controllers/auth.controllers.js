@@ -9,7 +9,6 @@ import {
   forgetPasswordContent,
   sendMail,
 } from "../utils/mail.js";
-
 dotenv.config();
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -60,8 +59,6 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, "User created successfully", sanitizedUser));
 });
 
-// <------------------ verifiation ------------------>
-
 const verifyUserEmail = asyncHandler(async (req, res) => {
   const { token } = req.params;
 
@@ -85,8 +82,6 @@ const verifyUserEmail = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Email verified successfully", true));
 });
-
-// <----------------------- Login User ----------------------->
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password, username } = req.body;
@@ -140,8 +135,6 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "User logged in successfully", sanitizedUser));
 });
 
-// <----------------------- logOutUser ----------------------->
-
 const logOutUser = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
 
@@ -178,7 +171,6 @@ const logOutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "User logged out successfully", true));
 });
 
-// <----------------------- resendVerificationEmail ----------------------->
 const resendVerificationEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
