@@ -138,17 +138,95 @@ const loginUser = asyncHandler(async (req, res) => {
 // <----------------------- logOutUser ----------------------->
 
 const logOutUser = asyncHandler(async (req, res) => {
-  const { user } = req.body;
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "User already logged out", true));
+  }
+
+  const user = await User.findOne({ refreshToken });
+
+  if (!user) {
+    return res.status(404).json(new ApiError(404, "User not found", false));
+  }
+
+  user.refreshToken = "";
+
+  await user.save({ validateBeforeSave: false });
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "User logged out successfully", true));
 });
 
-// const resendVerificationEmail = asyncHandler(async (req, res) => {
-//   const { email, password, firstname, lastname, username, role, mobile } =
-//     req.body;
-// });
-// const refreshAccessToken = asyncHandler(async (req, res) => {
-//   const { email, password, firstname, lastname, username, role, mobile } =
-//     req.body;
-// });
+// <----------------------- resendVerificationEmail ----------------------->
+const resendVerificationEmail = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(200).json(new ApiResponse(200, "User not found", true));
+  }
+
+  if (user.isEmailVerified) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Email already verified", false));
+  }
+
+  const { unHeshedToken, tokenExpiry } = user.generateVerificationToken();
+
+  user.emailVerificationToken = unHeshedToken;
+  user.emailVerificationTokenExpiry = tokenExpiry;
+
+  await user.save({ validateBeforeSave: false });
+
+  const verifyUrl = `${process.env.BASE_URL}/api/v1/auth/verify-email/${unHeshedToken}`;
+
+  await sendMail({
+    email: email,
+    subject: "Email Verification",
+    mailGenContent: emailVerifyContent(user.username, verifyUrl),
+  });
+
+  const sanitizedUser = {
+    _id: user._id,
+    email: user.email,
+    username: user.username,
+    role: user.role,
+    isEmailVerified: user.isEmailVerified,
+  };
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "Verification email sent successfully",
+        sanitizedUser,
+      ),
+    );
+});
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const { email, password, firstname, lastname, username, role, mobile } =
+    req.body;
+});
 // const forgetPasswordRequest = asyncHandler(async (req, res) => {
 //   const { email, password, firstname, lastname, username, role, mobile } =
 //     req.body;
@@ -164,9 +242,9 @@ const logOutUser = asyncHandler(async (req, res) => {
 export {
   registerUser,
   loginUser,
-  // logOutUser,
+  logOutUser,
   verifyUserEmail,
-  // resendVerificationEmail,
+  resendVerificationEmail,
   // refreshAccessToken,
   // forgetPasswordRequest,
   // changeCurrentPassword,

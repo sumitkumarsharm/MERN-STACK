@@ -11,6 +11,12 @@ class ApiError extends Error {
     this.errors = errors;
     this.success = false;
 
+    Object.defineProperty(this, "message", {
+      value: message,
+      enumerable: true,
+      writable: true,
+    });
+
     if (stack) {
       this.stack = stack;
     } else {
