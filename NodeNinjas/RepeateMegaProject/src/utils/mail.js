@@ -66,7 +66,7 @@ export const emailVerifyContent = (username, verificationUrl) => {
   );
 };
 
-const forgetPasswordContent = (username, resetUrl) => {
+export const forgetPasswordContent = (username, resetUrl) => {
   return buildEmailTemplate(
     username,
     "We received a request to reset your password for your Task Management System account.",
