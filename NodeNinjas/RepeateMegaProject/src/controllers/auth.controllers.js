@@ -3,6 +3,7 @@ import { ApiError } from "../utils/api-error.js";
 import dotenv from "dotenv";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
+import jwt from "jsonwebtoken";
 import {
   emailVerifyContent,
   forgetPasswordContent,
@@ -299,14 +300,66 @@ const forgetPasswordRequest = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Password reset email sent successfully"));
 });
-// const changeCurrentPassword = asyncHandler(async (req, res) => {
-//   const { email, password, firstname, lastname, username, role, mobile } =
-//     req.body;
-// });
-// const getCurrentUser = asyncHandler(async (req, res) => {
-//   const { email, password, firstname, lastname, username, role, mobile } =
-//     req.body;
-// });
+
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(200).json(new ApiResponse(200, "User not found", true));
+  }
+
+  const isPasswordMatched = await user.isPasswordMatched(currentPassword);
+
+  if (!isPasswordMatched) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Current password is incorrect", false));
+  }
+
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password changed successfully"));
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { newPassword } = req.body;
+  const { token } = req.params;
+
+  console.log(token);
+
+  const user = await User.findOne({ forgotPasswordToken: token });
+
+  if (!user) {
+    return res.status(200).json(new ApiResponse(200, "User not found", true));
+  }
+
+  user.password = newPassword;
+  user.forgotPasswordToken = undefined;
+  user.forgotPasswordTokenExpiry = undefined;
+
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password reset successfully"));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(200).json(new ApiResponse(200, "User not found", true));
+  }
+
+  return res.status(200).json(new ApiResponse(200, "User found", user));
+});
+
 export {
   registerUser,
   loginUser,
@@ -315,6 +368,7 @@ export {
   resendVerificationEmail,
   refreshAccessToken,
   forgetPasswordRequest,
-  // changeCurrentPassword,
-  // getCurrentUser,
+  changeCurrentPassword,
+  resetPassword,
+  getCurrentUser,
 };
