@@ -26,9 +26,7 @@ router.post(
   validate,
   registerUser,
 );
-
 router.post("/verify-email/:token", verifyUserEmail);
-
 router.post("/login", userLoginValidatorSchema(), validate, loginUser);
 router.post("/logout", verifyUser, logOutUser);
 router.post("/resend-verification-mail", resendVerificationEmail);

@@ -90,6 +90,12 @@ const loginUser = asyncHandler(async (req, res) => {
     $or: [{ email }, { username }],
   });
 
+  if (user && !user.isEmailVerified) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Please verify your email first!!", false));
+  }
+
   if (!user) {
     return res.status(404).json(new ApiError(404, "User not found", false));
   }
