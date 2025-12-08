@@ -12,12 +12,14 @@ app.use(cookieParser());
 import helthCheckRoutes from "./routes/helthcheck.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
+import noteRoutes from "./routes/note.routes.js";
 import { errorHandler } from "./middlewares/error.middlewares.js";
 
 // yaha routes hai
 app.use("/api/v1/helthcheck", helthCheckRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/projects", projectRoutes);
+app.use("/api/v1/notes", noteRoutes);
 
 // Error handler yaha hai
 app.use(errorHandler);
