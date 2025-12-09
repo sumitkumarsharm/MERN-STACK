@@ -25,15 +25,18 @@ const verifyUser = asyncHandler(async (req, res, next) => {
     return res.status(401).json(new ApiError(401, "Invalid or Expired Token"));
   }
 
-  // FIND USER
-  const user = await User.findById(decoded.id).select(
+  const userId = decoded.id || decoded._id;
+
+  const user = await User.findById(userId).select(
     "-password -emailVerificationToken -forgotPasswordToken",
   );
+
   if (!user) return res.status(401).json(new ApiError(401, "User not found"));
+
   req.user = {
     ...user._doc,
-    userId: user._id,
     id: user._id,
+    userId: user._id,
   };
 
   next();

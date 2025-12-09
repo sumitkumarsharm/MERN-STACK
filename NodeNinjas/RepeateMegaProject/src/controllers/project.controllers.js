@@ -180,52 +180,35 @@ const updateMemberRole = asyncHandler(async (req, res) => {
   const { projectId, memberId } = req.params;
   const { role } = req.body;
 
+  if (!role) {
+    return res.status(400).json(new ApiError(400, "Role is required"));
+  }
+
   const isAdmin = await ProjectMemeber.findOne({
     user: req.user.userId,
     project: projectId,
     role: "admin",
   });
-  if (!isAdmin)
+
+  if (!isAdmin) {
     return res
       .status(403)
-      .json(new ApiError(403, "Only admin can change role"));
+      .json(new ApiError(403, "Only admin can update role"));
+  }
 
-  const updateMemberRole = asyncHandler(async (req, res) => {
-    const { projectId, memberId } = req.params;
-    const { role } = req.body;
+  const updated = await ProjectMemeber.findByIdAndUpdate(
+    memberId,
+    { role },
+    { new: true },
+  ).populate("user", "name email _id");
 
-    // Admin check
-    const isAdmin = await ProjectMemeber.findOne({
-      user: req.user.userId,
-      project: projectId,
-      role: "admin",
-    });
-
-    if (!isAdmin) {
-      return res
-        .status(403)
-        .json(new ApiError(403, "Only admin can update role"));
-    }
-
-    // Update & return full updated member with user data populated
-    const updated = await ProjectMemeber.findByIdAndUpdate(
-      memberId,
-      { role },
-      { new: true },
-    ).populate("user", "name email _id"); // 🔥 now data return always
-
-    if (!updated) {
-      return res.status(404).json(new ApiError(404, "Member not found"));
-    }
-
-    return res
-      .status(200)
-      .json(new ApiResponse(200, updated, "Role updated successfully", true));
-  });
+  if (!updated) {
+    return res.status(404).json(new ApiError(404, "Member not found"));
+  }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, updated, "Role updated", true));
+    .json(new ApiResponse(200, updated, "Role updated successfully", true));
 });
 
 const updateProjectMembers = asyncHandler(async (req, res) => {

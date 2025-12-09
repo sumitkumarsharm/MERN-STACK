@@ -6,10 +6,11 @@ import {
   getSingleNote,
   updateNote,
 } from "../controllers/note.controllers.js";
+import { verifyUser } from "../middlewares/verify.middlewares.js";
 
 const router = Router();
 
-router.post("/", CreateNote);
+router.post("/", verifyUser, CreateNote);
 
 router.get("/:projectId", GetNotesByProject);
 
