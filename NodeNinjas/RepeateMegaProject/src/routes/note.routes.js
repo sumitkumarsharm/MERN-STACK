@@ -16,8 +16,8 @@ router.get("/:projectId", GetNotesByProject);
 
 router.get("/note/:noteId", getSingleNote);
 
-router.patch("/:noteId", updateNote);
+router.patch("/:noteId", verifyUser, updateNote);
 
-router.delete("/:noteId", deleteNote);
+router.delete("/:noteId", verifyUser, deleteNote);
 
 export default router;

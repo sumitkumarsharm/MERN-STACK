@@ -10,6 +10,7 @@ app.use(cookieParser());
 
 // Routes import kiya
 import helthCheckRoutes from "./routes/helthcheck.routes.js";
+
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import noteRoutes from "./routes/note.routes.js";

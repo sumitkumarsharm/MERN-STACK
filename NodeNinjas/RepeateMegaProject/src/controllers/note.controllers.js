@@ -44,7 +44,7 @@ const updateNote = asyncHandler(async (req, res) => {
   if (!note)
     return res.status(404).json(new ApiError(404, "Note not found", false));
 
-  if (note.createdBy.toString() !== req.user.id) {
+  if (note.createdBy.toString() !== req.user.id.toString()) {
     return res.status(403).json(new ApiError(403, "Not authorized", false));
   }
 
@@ -63,7 +63,7 @@ const deleteNote = asyncHandler(async (req, res) => {
   if (!note)
     return res.status(404).json(new ApiError(404, "Note not found", false));
 
-  if (note.createdBy.toString() !== req.user.id) {
+  if (note.createdBy.toString() !== req.user.id.toString()) {
     return res.status(403).json(new ApiError(403, "Not authorized", false));
   }
 
