@@ -13,7 +13,7 @@ const userSchema = new Schema(
       },
       default: {
         url: "https://placehold.com/600x400",
-        loaclpath: "",
+        loaclPath: "",
       },
     },
     username: {

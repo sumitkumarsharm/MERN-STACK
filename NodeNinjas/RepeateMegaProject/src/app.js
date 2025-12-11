@@ -10,17 +10,18 @@ app.use(cookieParser());
 
 // Routes import kiya
 import helthCheckRoutes from "./routes/helthcheck.routes.js";
-
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import noteRoutes from "./routes/note.routes.js";
+import projectMemberRoutes from "./routes/projectMember.routes.js";
 import { errorHandler } from "./middlewares/error.middlewares.js";
 
 // yaha routes hai
-app.use("/api/v1/helthcheck", helthCheckRoutes);
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/projects", projectRoutes);
-app.use("/api/v1/notes", noteRoutes);
+app.use("/api/helthcheck", helthCheckRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/projectMember", projectMemberRoutes);
+app.use("/api/notes", noteRoutes);
 
 // Error handler yaha hai
 app.use(errorHandler);
