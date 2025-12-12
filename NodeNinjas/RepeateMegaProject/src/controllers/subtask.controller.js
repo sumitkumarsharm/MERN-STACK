@@ -7,9 +7,6 @@ import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { isProjectAdmin } from "../utils/isProjectAdmin.js";
 
-/**
- * Helper → check if user is project member
- */
 const isProjectMember = async (userId, projectId) => {
   const member = await ProjectMemeber.findOne({
     user: userId,
@@ -18,11 +15,6 @@ const isProjectMember = async (userId, projectId) => {
   return !!member;
 };
 
-/**
- * POST /api/v1/subtasks
- * body: { title, taskId }
- * Allowed: assignedTo OR project admin
- */
 export const createSubTask = asyncHandler(async (req, res) => {
   const { title, taskId } = req.body;
 
@@ -50,11 +42,6 @@ export const createSubTask = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, subtask, "Subtask created", true));
 });
 
-/**
- * GET /api/v1/subtasks/:taskId
- * Get all subtasks of a task
- * Allowed: project member or admin
- */
 export const getSubTasks = asyncHandler(async (req, res) => {
   const { taskId } = req.params;
 
@@ -79,11 +66,6 @@ export const getSubTasks = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, subtasks, "Subtasks fetched", true));
 });
 
-/**
- * PATCH /api/v1/subtasks/:subtaskId
- * Update title
- * Allowed: assignee OR admin
- */
 export const updateSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
   const { title } = req.body;
@@ -112,11 +94,6 @@ export const updateSubTask = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, subtask, "Subtask updated", true));
 });
 
-/**
- * PATCH /api/v1/subtasks/toggle/:subtaskId
- * Toggle completed
- * Allowed: assignee or admin
- */
 export const toggleSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
 
@@ -143,10 +120,6 @@ export const toggleSubTask = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, subtask, "Subtask status updated", true));
 });
 
-/**
- * DELETE /api/v1/subtasks/:subtaskId
- * Allowed: assignee OR admin
- */
 export const deleteSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
 

@@ -10,12 +10,15 @@ import {
 import { verifyUser } from "../middlewares/verify.middlewares.js";
 
 const router = express.Router();
-router.use(verifyUser);
 
-router.post("/", createSubTask);
-router.get("/:taskId", getSubTasks);
-router.patch("/:subtaskId", updateSubTask);
-router.patch("/toggle/:subtaskId", toggleSubTask);
-router.delete("/:subtaskId", deleteSubTask);
+router.post("/", verifyUser, createSubTask);
+
+router.get("/:taskId", verifyUser, getSubTasks);
+
+router.patch("/:subtaskId", verifyUser, updateSubTask);
+
+router.patch("/toggle/:subtaskId", verifyUser, toggleSubTask);
+
+router.delete("/:subtaskId", verifyUser, deleteSubTask);
 
 export default router;
