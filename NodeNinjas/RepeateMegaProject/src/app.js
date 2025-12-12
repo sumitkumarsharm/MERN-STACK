@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import noteRoutes from "./routes/note.routes.js";
 import projectMemberRoutes from "./routes/projectMember.routes.js";
+import taskRouter from "./routes/task.routes.js";
 import { errorHandler } from "./middlewares/error.middlewares.js";
 
 // yaha routes hai
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/projectMember", projectMemberRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/tasks", taskRouter);
 
 // Error handler yaha hai
 app.use(errorHandler);
