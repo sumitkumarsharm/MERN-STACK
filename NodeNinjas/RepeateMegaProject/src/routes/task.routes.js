@@ -12,14 +12,13 @@ import {
 import { verifyUser } from "../middlewares/verify.middlewares.js";
 
 const router = express.Router();
-router.use(verifyUser);
 
-router.post("/", createTask);
-router.get("/project/:projectId", getTasksByProject);
-router.get("/:taskId", getTaskById);
-router.put("/:taskId", updateTask);
-router.put("/:taskId/status", updateTaskStatus);
-router.put("/:taskId/reassign", reassignTask);
-router.delete("/:taskId", deleteTask);
+router.post("/", verifyUser, createTask);
+router.get("/project/:projectId", verifyUser, getTasksByProject);
+router.get("/:taskId", verifyUser, getTaskById);
+router.put("/:taskId", verifyUser, updateTask);
+router.put("/:taskId/status", verifyUser, updateTaskStatus);
+router.put("/:taskId/reassign", verifyUser, reassignTask);
+router.delete("/:taskId", verifyUser, deleteTask);
 
 export default router;

@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { ProjectMemeber } from "../models/projectmember.models.js";
 import { User } from "../models/user.models.js";
+
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import { isProjectAdmin } from "../utils/isProjectAdmin.js";
+
+import { canAccessProject, canManageProject } from "../utils/permissions.js";
 
 export const addMember = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
@@ -12,11 +14,12 @@ export const addMember = asyncHandler(async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(projectId))
     throw new ApiError(400, "Invalid projectId");
+
   if (!mongoose.Types.ObjectId.isValid(userId))
     throw new ApiError(400, "Invalid userId");
 
-  const isAdmin = await isProjectAdmin(req.user, projectId);
-  if (!isAdmin) throw new ApiError(403, "Only admin can add");
+  if (!(await canManageProject(req.user, projectId)))
+    throw new ApiError(403, "Only admin can add members");
 
   const user = await User.findById(userId);
   if (!user) throw new ApiError(404, "User not found");
@@ -25,59 +28,56 @@ export const addMember = asyncHandler(async (req, res) => {
     user: userId,
     project: projectId,
   });
-  if (exists) throw new ApiError(400, "User already added to this project");
+  if (exists) throw new ApiError(400, "User already added");
 
   const member = await ProjectMemeber.create({
     user: userId,
     project: projectId,
-    role: role && ["admin", "member"].includes(role) ? role : "member",
+    role: role || "member",
   });
 
   return res
     .status(201)
-    .json(new ApiResponse(201, member, "Member added", true));
+    .json(new ApiResponse(201, member, "Member added successfully", true));
 });
 
 export const getMembers = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(projectId))
     throw new ApiError(400, "Invalid projectId");
 
-  const isMember = await ProjectMemeber.findOne({
-    user: req.user.userId,
-    project: projectId,
-  });
-  if (!isMember && req.user.role !== "admin")
-    throw new ApiError(403, "Access denied");
+  if (!(await canAccessProject(req.user, projectId)))
+    throw new ApiError(403, "Not authorized to view project members");
 
   const members = await ProjectMemeber.find({ project: projectId }).populate(
     "user",
-    "username email role avatar",
+    "username email role",
   );
+
   return res
     .status(200)
-    .json(new ApiResponse(200, members, "Members fetched", true));
+    .json(new ApiResponse(200, members, "Members fetched successfully", true));
 });
 
 export const updateMemberRole = asyncHandler(async (req, res) => {
   const { projectId, memberId } = req.params;
   const { role } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(projectId))
-    throw new ApiError(400, "Invalid projectId");
+  if (!role) throw new ApiError(400, "Role is required");
+
   if (!mongoose.Types.ObjectId.isValid(memberId))
     throw new ApiError(400, "Invalid memberId");
-  if (!role || !["admin", "member"].includes(role))
-    throw new ApiError(400, "Invalid role");
 
-  const isAdmin = await isProjectAdmin(req.user, projectId);
-  if (!isAdmin) throw new ApiError(403, "Only admin can update");
+  if (!(await canManageProject(req.user, projectId)))
+    throw new ApiError(403, "Only admin can update roles");
 
   const updated = await ProjectMemeber.findByIdAndUpdate(
     memberId,
     { role },
     { new: true },
-  ).populate("user", "username email");
+  ).populate("user", "username email role");
+
   if (!updated) throw new ApiError(404, "Member not found");
 
   return res
@@ -88,18 +88,15 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
 export const removeMember = asyncHandler(async (req, res) => {
   const { projectId, memberId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(projectId))
-    throw new ApiError(400, "Invalid projectId");
   if (!mongoose.Types.ObjectId.isValid(memberId))
     throw new ApiError(400, "Invalid memberId");
 
-  const isAdmin = await isProjectAdmin(req.user, projectId);
-  if (!isAdmin) throw new ApiError(403, "Only admin can remove");
+  if (!(await canManageProject(req.user, projectId)))
+    throw new ApiError(403, "Only admin can remove members");
 
-  const deleted = await ProjectMemeber.findByIdAndDelete(memberId);
-  if (!deleted) throw new ApiError(404, "Member not found");
+  await ProjectMemeber.findByIdAndDelete(memberId);
 
   return res
     .status(200)
-    .json(new ApiResponse(200, null, "Member removed", true));
+    .json(new ApiResponse(200, null, "Member removed successfully", true));
 });

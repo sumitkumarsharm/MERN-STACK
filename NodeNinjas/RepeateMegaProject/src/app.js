@@ -17,6 +17,7 @@ import projectMemberRoutes from "./routes/projectMember.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import subtaskRouter from "./routes/subtask.routes.js";
 import { errorHandler } from "./middlewares/error.middlewares.js";
+import taskAttachmentRoutes from "./routes/taskAttachment.routes.js";
 
 // yaha routes hai
 app.use("/api/helthcheck", helthCheckRoutes);
@@ -26,6 +27,7 @@ app.use("/api/projectMember", projectMemberRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/tasks", taskRouter);
 app.use("/api/subtasks", subtaskRouter);
+app.use("/api/taskAttachments", taskAttachmentRoutes);
 
 // Error handler yaha hai
 app.use(errorHandler);

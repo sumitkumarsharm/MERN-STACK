@@ -1,4 +1,3 @@
-// controllers/task.controller.js
 import mongoose from "mongoose";
 import { Task } from "../models/task.models.js";
 import { SubTask } from "../models/subtask.models.js";
@@ -7,7 +6,12 @@ import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import { isProjectAdmin } from "../utils/isProjectAdmin.js";
+import {
+  canEditTask,
+  canUpdateStatus,
+  canReassignTask,
+  canAccessProject,
+} from "../utils/permissions.js";
 
 const isProjectMemberOrAdmin = async (reqUser, projectId) => {
   if (reqUser.role === "admin") return true;
@@ -103,14 +107,8 @@ export const getTaskById = asyncHandler(async (req, res) => {
 
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isMember = await ProjectMemeber.findOne({
-    user: req.user.userId,
-    project: task.project,
-  });
-
   if (
-    !isMember &&
-    req.user.role !== "admin" &&
+    !(await canAccessProject(req.user, task.project)) &&
     String(task.assignedTo?._id || "") !== String(req.user.userId)
   )
     throw new ApiError(403, "Access denied");
@@ -126,10 +124,7 @@ export const updateTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssigner = String(task.assignedBy) === String(req.user.userId);
-
-  if (!isAdmin && !isAssigner)
+  if (!(await canEditTask(req.user, task)))
     throw new ApiError(403, "Only assigner or admin can update task");
 
   const allowed = {};
@@ -161,10 +156,7 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isAssignee = String(task.assignedTo) === String(req.user.userId);
-  const isAdmin = req.user.role === "admin";
-
-  if (!isAssignee && !isAdmin)
+  if (!(await canUpdateStatus(req.user, task)))
     throw new ApiError(403, "Only assignee or admin can update status");
 
   task.status = status;
@@ -191,8 +183,8 @@ export const reassignTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  if (!isAdmin) throw new ApiError(403, "Only project admin can reassign task");
+  if (!(await canReassignTask(req.user, task)))
+    throw new ApiError(403, "Only project admin can reassign task");
 
   const newAssignee = await User.findById(newAssigneeId);
   if (!newAssignee) throw new ApiError(404, "New assignee not found");
@@ -224,10 +216,7 @@ export const deleteTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssigner = String(task.assignedBy) === String(req.user.userId);
-
-  if (!isAdmin && !isAssigner)
+  if (!(await canEditTask(req.user, task)))
     throw new ApiError(403, "Only assigner or admin can delete task");
 
   await Promise.all([

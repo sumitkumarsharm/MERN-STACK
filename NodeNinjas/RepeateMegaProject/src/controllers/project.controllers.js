@@ -6,7 +6,8 @@ import { ProjectNote } from "../models/note.models.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import { isProjectAdmin } from "../utils/isProjectAdmin.js";
+
+import { canAccessProject, canManageProject } from "../utils/permissions.js";
 
 export const getProjects = asyncHandler(async (req, res) => {
   const page = Math.max(1, parseInt(req.query.page || "1"));
@@ -14,8 +15,7 @@ export const getProjects = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
   const search = (req.query.search || "").trim();
 
-  const match = { user: req.user.userId };
-  const joined = await ProjectMemeber.find(match)
+  const joined = await ProjectMemeber.find({ user: req.user.userId })
     .populate({
       path: "project",
       match: search ? { name: { $regex: search, $options: "i" } } : {},
@@ -24,7 +24,9 @@ export const getProjects = asyncHandler(async (req, res) => {
     .skip(skip)
     .limit(limit);
 
-  const projects = joined.map((j) => j.project).filter((p) => p !== null);
+  const projects = joined
+    .map((entry) => entry.project)
+    .filter((p) => p !== null);
 
   return res
     .status(200)
@@ -35,15 +37,11 @@ export const getProjects = asyncHandler(async (req, res) => {
 
 export const getProjectById = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(projectId))
     throw new ApiError(400, "Invalid projectId");
 
-  const isMember = await ProjectMemeber.findOne({
-    user: req.user.userId,
-    project: projectId,
-  });
-
-  if (!isMember && req.user.role !== "admin")
+  if (!(await canAccessProject(req.user, projectId)))
     throw new ApiError(403, "Access denied");
 
   const project = await Project.findById(projectId).lean();
@@ -56,6 +54,7 @@ export const getProjectById = asyncHandler(async (req, res) => {
 
 export const createProject = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
+
   if (!name || !description)
     throw new ApiError(400, "Name and description are required");
 
@@ -81,11 +80,12 @@ export const createProject = asyncHandler(async (req, res) => {
 
 export const updateProject = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(projectId))
     throw new ApiError(400, "Invalid projectId");
 
-  const isAdmin = await isProjectAdmin(req.user, projectId);
-  if (!isAdmin) throw new ApiError(403, "Only admin can update");
+  if (!(await canManageProject(req.user, projectId)))
+    throw new ApiError(403, "Only admin can update project");
 
   const allowed = {};
   if (req.body.name) allowed.name = req.body.name;
@@ -97,6 +97,7 @@ export const updateProject = asyncHandler(async (req, res) => {
   const updated = await Project.findByIdAndUpdate(projectId, allowed, {
     new: true,
   });
+
   if (!updated) throw new ApiError(404, "Project not found");
 
   return res
@@ -106,11 +107,12 @@ export const updateProject = asyncHandler(async (req, res) => {
 
 export const deleteProject = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(projectId))
     throw new ApiError(400, "Invalid projectId");
 
-  const isAdmin = await isProjectAdmin(req.user, projectId);
-  if (!isAdmin) throw new ApiError(403, "Only admin can delete");
+  if (!(await canManageProject(req.user, projectId)))
+    throw new ApiError(403, "Only admin can delete project");
 
   await Promise.all([
     Project.findByIdAndDelete(projectId),

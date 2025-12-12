@@ -1,35 +1,21 @@
 import mongoose from "mongoose";
 import { SubTask } from "../models/subtask.models.js";
 import { Task } from "../models/task.models.js";
-import { ProjectMemeber } from "../models/projectmember.models.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import { isProjectAdmin } from "../utils/isProjectAdmin.js";
-
-const isProjectMember = async (userId, projectId) => {
-  const member = await ProjectMemeber.findOne({
-    user: userId,
-    project: projectId,
-  });
-  return !!member;
-};
+import { canAccessProject, canModifySubtask } from "../utils/permissions.js";
 
 export const createSubTask = asyncHandler(async (req, res) => {
   const { title, taskId } = req.body;
 
   if (!title || !taskId) throw new ApiError(400, "title & taskId required");
-  if (!mongoose.Types.ObjectId.isValid(taskId))
-    throw new ApiError(400, "Invalid taskId");
 
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssignee = String(task.assignedTo) === String(req.user.userId);
-
-  if (!isAdmin && !isAssignee)
-    throw new ApiError(403, "Only assignee or admin can add subtasks");
+  if (!(await canModifySubtask(req.user, task)))
+    throw new ApiError(403, "You cannot create subtask");
 
   const subtask = await SubTask.create({
     title,
@@ -45,21 +31,13 @@ export const createSubTask = asyncHandler(async (req, res) => {
 export const getSubTasks = asyncHandler(async (req, res) => {
   const { taskId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(taskId))
-    throw new ApiError(400, "Invalid taskId");
-
   const task = await Task.findById(taskId);
   if (!task) throw new ApiError(404, "Task not found");
 
-  const isMember = await isProjectMember(req.user.userId, task.project);
-  const isAdmin = req.user.role === "admin";
+  if (!(await canAccessProject(req.user, task.project)))
+    throw new ApiError(403, "Not allowed");
 
-  if (!isMember && !isAdmin)
-    throw new ApiError(403, "You are not allowed to view subtasks");
-
-  const subtasks = await SubTask.find({ task: taskId }).sort({
-    createdAt: -1,
-  });
+  const subtasks = await SubTask.find({ task: taskId }).sort({ createdAt: -1 });
 
   return res
     .status(200)
@@ -70,21 +48,13 @@ export const updateSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
   const { title } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(subtaskId))
-    throw new ApiError(400, "Invalid subtaskId");
-  if (!title) throw new ApiError(400, "Title required");
-
   const subtask = await SubTask.findById(subtaskId);
   if (!subtask) throw new ApiError(404, "Subtask not found");
 
   const task = await Task.findById(subtask.task);
-  if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssignee = String(task.assignedTo) === String(req.user.userId);
-
-  if (!isAdmin && !isAssignee)
-    throw new ApiError(403, "Only assignee or admin can update subtask");
+  if (!(await canModifySubtask(req.user, task)))
+    throw new ApiError(403, "Not allowed");
 
   subtask.title = title;
   await subtask.save();
@@ -97,20 +67,13 @@ export const updateSubTask = asyncHandler(async (req, res) => {
 export const toggleSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(subtaskId))
-    throw new ApiError(400, "Invalid subtaskId");
-
   const subtask = await SubTask.findById(subtaskId);
   if (!subtask) throw new ApiError(404, "Subtask not found");
 
   const task = await Task.findById(subtask.task);
-  if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssignee = String(task.assignedTo) === String(req.user.userId);
-
-  if (!isAdmin && !isAssignee)
-    throw new ApiError(403, "Only assignee or admin can complete subtask");
+  if (!(await canModifySubtask(req.user, task)))
+    throw new ApiError(403, "Not allowed");
 
   subtask.isCompleted = !subtask.isCompleted;
   await subtask.save();
@@ -123,20 +86,13 @@ export const toggleSubTask = asyncHandler(async (req, res) => {
 export const deleteSubTask = asyncHandler(async (req, res) => {
   const { subtaskId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(subtaskId))
-    throw new ApiError(400, "Invalid subtaskId");
-
   const subtask = await SubTask.findById(subtaskId);
   if (!subtask) throw new ApiError(404, "Subtask not found");
 
   const task = await Task.findById(subtask.task);
-  if (!task) throw new ApiError(404, "Task not found");
 
-  const isAdmin = await isProjectAdmin(req.user, task.project);
-  const isAssignee = String(task.assignedTo) === String(req.user.userId);
-
-  if (!isAdmin && !isAssignee)
-    throw new ApiError(403, "Only assignee or admin can delete subtask");
+  if (!(await canModifySubtask(req.user, task)))
+    throw new ApiError(403, "Not allowed");
 
   await SubTask.findByIdAndDelete(subtaskId);
 
